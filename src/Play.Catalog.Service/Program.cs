@@ -1,6 +1,9 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
+using Play.Catalog.Service.Repositories;
+using Play.Catalog.Service.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,17 @@ var builder = WebApplication.CreateBuilder(args);
 //docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db mongo
 BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
+
+var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDBSettings)).Get<MongoDBSettings>();
+    var mongoClient = new MongoClient(mongoDBSettings?.connectionString);
+    return mongoClient.GetDatabase(serviceSettings?.ServiceName);
+});
+
+builder.Services.AddSingleton<IItemsRepository, ItemsRepository>();
 
 builder.Services.AddControllers(options =>
 {
