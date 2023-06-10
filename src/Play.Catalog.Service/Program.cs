@@ -10,36 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Add services to the container.
 
-//Add MongoDB database and Run on docker container with proper string representation
-//docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db mongo
-
-BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
-
-var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
-
-//Dependency Injection for Mongo Settings
-builder.Services.AddSingleton(serviceProvider =>
-{
-    var mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDBSettings)).Get<MongoDBSettings>();
-    var mongoClient = new MongoClient(mongoDBSettings?.connectionString);
-    return mongoClient.GetDatabase(serviceSettings?.ServiceName);
-});
-
-//Dependency Injection for item repo
-builder.Services.AddSingleton<IRepository<Item>>(serviceProvider =>
-{
-    var database = serviceProvider.GetService<IMongoDatabase>();
-    if (database != null)
-    {
-        return new MongoRepository<Item>(database, "items");
-    }
-    else
-    {
-        var mongoClient = new MongoClient(builder.Configuration.GetSection(nameof(MongoDBSettings)).Get<MongoDBSettings>()?.connectionString);
-        return new MongoRepository<Item>(mongoClient.GetDatabase(serviceSettings?.ServiceName), "items");
-    }
-});
+builder.Services.AddMongoDB()
+                .AddMongoRepository<Item>("items");
 
 builder.Services.AddControllers(options =>
 {
