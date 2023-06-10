@@ -16,6 +16,7 @@ BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String))
 
 var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
+//Dependency Injection for Mongo Settings
 builder.Services.AddSingleton(serviceProvider =>
 {
     var mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDBSettings)).Get<MongoDBSettings>();
@@ -23,6 +24,7 @@ builder.Services.AddSingleton(serviceProvider =>
     return mongoClient.GetDatabase(serviceSettings?.ServiceName);
 });
 
+//Dependency Injection for item repo
 builder.Services.AddSingleton<IItemsRepository, ItemsRepository>();
 
 builder.Services.AddControllers(options =>
