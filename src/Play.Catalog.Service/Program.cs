@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Add MongoDB database and Run on docker container with proper string representation
 //docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db mongo
+
 BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
 
