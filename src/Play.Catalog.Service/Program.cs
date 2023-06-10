@@ -2,6 +2,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using Play.Catalog.Service.Entities;
 using Play.Catalog.Service.Repositories;
 using Play.Catalog.Service.Settings;
 
@@ -26,7 +27,19 @@ builder.Services.AddSingleton(serviceProvider =>
 });
 
 //Dependency Injection for item repo
-builder.Services.AddSingleton<IItemsRepository, ItemsRepository>();
+builder.Services.AddSingleton<IRepository<Item>>(serviceProvider =>
+{
+    var database = serviceProvider.GetService<IMongoDatabase>();
+    if (database != null)
+    {
+        return new MongoRepository<Item>(database, "items");
+    }
+    else
+    {
+        var mongoClient = new MongoClient(builder.Configuration.GetSection(nameof(MongoDBSettings)).Get<MongoDBSettings>()?.connectionString);
+        return new MongoRepository<Item>(mongoClient.GetDatabase(serviceSettings?.ServiceName), "items");
+    }
+});
 
 builder.Services.AddControllers(options =>
 {
