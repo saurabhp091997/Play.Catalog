@@ -33,19 +33,19 @@ namespace Play.Catalog.Service.Repositories
         public static IServiceCollection AddMongoRepository<T>(this IServiceCollection services, string collectionName) where T : IEntity
         {
             //Dependency Injection for item repo
-            services.AddSingleton<IRepository<Item>>(serviceProvider =>
+            services.AddSingleton<IRepository<T>>(serviceProvider =>
             {
                 var database = serviceProvider.GetService<IMongoDatabase>();
                 if (database != null)
                 {
-                    return new MongoRepository<Item>(database, "items");
+                    return new MongoRepository<T>(database, "items");
                 }
                 else
                 {
                     var configuration = serviceProvider.GetService<IConfiguration>();
                     var serviceSettings = configuration?.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
                     var mongoClient = new MongoClient(configuration?.GetSection(nameof(MongoDBSettings)).Get<MongoDBSettings>()?.connectionString);
-                    return new MongoRepository<Item>(mongoClient.GetDatabase(serviceSettings?.ServiceName), "items");
+                    return new MongoRepository<T>(mongoClient.GetDatabase(serviceSettings?.ServiceName), "items");
                 }
             });
 
