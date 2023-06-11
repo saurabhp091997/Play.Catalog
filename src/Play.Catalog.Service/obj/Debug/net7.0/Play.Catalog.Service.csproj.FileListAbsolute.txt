@@ -44,3 +44,5 @@ C:\Saurabh\DotNetMicroservices\Play.Catalog\src\Play.Catalog.Service\bin\Debug\n
 C:\Saurabh\DotNetMicroservices\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net7.0\runtimes\linux\native\libmongocrypt.so
 C:\Saurabh\DotNetMicroservices\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net7.0\runtimes\osx\native\libmongocrypt.dylib
 C:\Saurabh\DotNetMicroservices\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net7.0\runtimes\win\native\mongocrypt.dll
+C:\Saurabh\DotNetMicroservices\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net7.0\Microsoft.Extensions.Configuration.Binder.dll
+C:\Saurabh\DotNetMicroservices\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net7.0\Play.Common.dll
