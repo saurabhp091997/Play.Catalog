@@ -8,9 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 //Add services to the container.
 var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
-builder.Services.AddMongoDB()
+builder.Services.AddMongo()
                 .AddMongoRepository<Item>("items")
-                .AddMassTransitWithRabbitMQ();
+                .AddMassTransitWithRabbitMq();
 
 //builder.Services.AddMassTransitHostedService();
 
